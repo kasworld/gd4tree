@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=3 uid="uid://1o57d228fylb"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_atpxs"]
+[ext_resource type="Texture2D" uid="uid://bhmbb7tlw5j3a" path="res://image/Dark-brown-fine-wood-texture.jpg" id="2_jkwbg"]
+[ext_resource type="PackedScene" uid="uid://0tbwq0dq04w7" path="res://tree_cylinder/tree_cylinder.tscn" id="2_knt60"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_668xm"]
+albedo_texture = ExtResource("2_jkwbg")
+emission = Color(0.160784, 0.160784, 0.160784, 1)
+backlight = Color(1, 1, 1, 1)
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+grow_amount = -2.547
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_e5nb6"]
+material = SubResource("StandardMaterial3D_668xm")
+size = Vector2(4, 4)
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_atpxs")
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_e5nb6")
+
+[node name="TreeCylinder" parent="." instance=ExtResource("2_knt60")]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, -1, 1, -1)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
