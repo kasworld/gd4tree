@@ -1,4 +1,5 @@
 extends Node3D
+class_name BarTree
 
 var tree_height :float = 1.6
 var tree_width :float = 3.0
