@@ -3,26 +3,40 @@ extends Node3D
 var tree_height :float = 1.6
 var tree_width :float = 3.0
 var tree_rotation_count :float = 3.0
-var tree_rotation_direction :float = -1.0
 var bar_count :int = 100
-var bar_height :float = tree_height/bar_count
 
+var tree_rotation_direction :float = 1.0
+var bar_height :float = tree_height/bar_count
 var bar_list :Array
 
-var brown_img = preload("res://image/Dark-brown-fine-wood-texture.jpg")
-var floor_img = preload("res://image/floorwood.jpg")
+func set_params(h :float, w:float, rot_count :float, rot_dir :float, b_count:int)->void:
+	tree_height = h
+	tree_width = w
+	tree_rotation_count = rot_count
+	tree_rotation_direction = rot_dir
+	bar_count = b_count
+	bar_height = tree_height/bar_count
+	for sp in bar_list:
+		remove_child(sp)
+	bar_list.clear()
 
-func init()->void:
-	var co1 = Color.RED
-	var co2 = Color.BLUE
-	#var mat = StandardMaterial3D.new()
-	#mat.albedo_texture = floor_img
+func set_rotate_direction(dir :float)->void:
+	tree_rotation_direction = dir
+
+func init_with_color(co1 :Color, co2:Color, emission :bool)->void:
 	for i in bar_count:
 		var rate = float(i)/bar_count
 		var bar_color = co1.lerp(co2,rate)
 		var mat = MatCache.get_color_mat(bar_color)
-		mat.emission_enabled = true
-		mat.emission = bar_color
+		if emission:
+			mat.emission_enabled = true
+			mat.emission = bar_color
+		var sp = new_mat_inst3d(i,mat)
+		bar_list.append(sp)
+		add_child(sp)
+
+func init_with_material(mat :Material)->void:
+	for i in bar_count:
 		var sp = new_mat_inst3d(i,mat)
 		bar_list.append(sp)
 		add_child(sp)
@@ -53,6 +67,3 @@ func set_bar_rotate_y(delta:float)->void:
 func bar_rotate_y(delta:float)->void:
 	for i in bar_list.size():
 		bar_list[i].rotate_y( delta * (tree_rotation_direction * float(i)*tree_rotation_count*PI/bar_count) )
-
-func _process(delta: float) -> void:
-	bar_rotate_y(delta)
