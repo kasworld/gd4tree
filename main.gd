@@ -11,40 +11,38 @@ func _ready() -> void:
 	$DirectionalLight3D.look_at(Vector3.ZERO)
 
 	var tr :BarTree
-	tr = tree_scene.instantiate()
-	tr.init_with_color(Color.RED, Color.BLUE,true)
-	add_child(tr)
-	tr.position = Vector3(1.5,0,1.5)
-	tr.set_rotate_direction(0.3)
-	tree_list.append(tr)
+	tr = new_tree_at(Vector3(0,0,0))
+	tr.set_params(1,1, 10,200, 10.0)
+	tr.init_with_color(Color.BLACK, Color.YELLOW, true)
 
-	tr = tree_scene.instantiate()
+	tr = new_tree_at(Vector3(1.5,0,1.5))
+	tr.set_params(2,1.5, 3,20, 3.0)
+	tr.init_with_color(Color.RED, Color.BLUE,true)
+
+	tr = new_tree_at(Vector3(-1.5,0,-1.5))
+	tr.set_params(2,2, 3,200, 6.0)
 	tr.init_with_color(Color.BLUE, Color.RED,false)
-	add_child(tr)
-	tr.position = Vector3(-1.5,0,-1.5)
-	tr.set_rotate_direction(0.6)
-	tree_list.append(tr)
 
 	var mat = StandardMaterial3D.new()
 	mat.albedo_texture = floor_img
 	#mat.uv1_triplanar = true
-	tr = tree_scene.instantiate()
+	tr = new_tree_at(Vector3(1.5,0,-1.5))
+	tr.set_params(3,1.6, 3,100, -3.0)
 	tr.init_with_material(mat)
-	add_child(tr)
-	tr.position = Vector3(1.5,0,-1.5)
-	tr.set_rotate_direction(-0.3)
-	tree_list.append(tr)
 
 	mat = StandardMaterial3D.new()
 	mat.albedo_texture = leaf_img
 	mat.uv1_triplanar = true
-	tr = tree_scene.instantiate()
+	tr = new_tree_at(Vector3(-1.5,0,1.5))
+	tr.set_params(1.5,1.3, 3,70, -6.0)
 	tr.init_with_material(mat)
-	add_child(tr)
-	tr.position = Vector3(-1.5,0,1.5)
-	tr.set_rotate_direction(-0.6)
-	tree_list.append(tr)
 
+func new_tree_at(p :Vector3)->BarTree:
+	var tr = tree_scene.instantiate()
+	add_child(tr)
+	tree_list.append(tr)
+	tr.position = p
+	return tr
 
 func _process(delta: float) -> void:
 	var t = Time.get_unix_time_from_system() /10
