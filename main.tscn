@@ -12,6 +12,7 @@ uv1_triplanar = true
 grow_amount = -2.547
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_e5nb6"]
+lightmap_size_hint = Vector2i(32, 32)
 material = SubResource("StandardMaterial3D_668xm")
 size = Vector2(6, 6)
 
@@ -27,7 +28,10 @@ current = true
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
+shadow_enabled = true
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
-omni_range = 10.0
+light_energy = 5.0
+shadow_enabled = true
+omni_range = 100.0

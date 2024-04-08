@@ -17,6 +17,9 @@ func set_params(w:float, h :float, bar_w :float, b_count:int, rot_vel :float)->v
 	bar_rotation_base_velocity = rot_vel
 	bar_count = b_count
 	bar_height = tree_height/bar_count
+	clear_bar_list()
+
+func clear_bar_list()->void:
 	for sp in bar_list:
 		remove_child(sp)
 	bar_list.clear()
@@ -28,7 +31,7 @@ func init_with_color(co1 :Color, co2:Color, emission :bool)->void:
 	for i in bar_count:
 		var rate = float(i)/bar_count
 		var bar_color = co1.lerp(co2,rate)
-		var mat = MatCache.get_color_mat(bar_color)
+		var mat = get_color_mat(bar_color)
 		if emission:
 			mat.emission_enabled = true
 			mat.emission = bar_color
@@ -41,6 +44,13 @@ func init_with_material(mat :Material)->void:
 		var sp = new_mat_inst3d(i,mat)
 		bar_list.append(sp)
 		add_child(sp)
+
+func get_color_mat(co: Color)->Material:
+	var mat = StandardMaterial3D.new()
+	mat.albedo_color = co
+	mat.metallic = 1
+	mat.clearcoat = true
+	return mat
 
 func new_mat_inst3d(i :int, mat :Material)->MeshInstance3D:
 	var pos_rev = float(bar_count-i)
