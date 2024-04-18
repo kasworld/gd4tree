@@ -49,21 +49,9 @@ func init_with_material(mat :Material,
 		bar_list.append(sp)
 		add_child(sp)
 
-func clear_bar_list()->void:
-	for sp in bar_list:
-		remove_child(sp)
-	bar_list.clear()
-
 func _process(delta: float) -> void:
 	if auto_rotate_bar != 0.0:
 		bar_rotate_y(auto_rotate_bar)
-
-func get_color_mat(co: Color)->Material:
-	var mat = StandardMaterial3D.new()
-	mat.albedo_color = co
-	mat.metallic = 1
-	mat.clearcoat = true
-	return mat
 
 func new_bar_inst3d(i :int, mat :Material)->MeshInstance3D:
 	var pos_rev = float(bar_count-i)
@@ -91,3 +79,16 @@ func bar_rotation_y(delta:float)->void:
 func bar_rotate_y(delta:float)->void:
 	for i in bar_list.size():
 		bar_list[i].rotate_y( delta * (bar_rotation_base_velocity * float(i)*PI/bar_count) )
+
+func clear_bar_list()->void:
+	for sp in bar_list:
+		remove_child(sp)
+	bar_list.clear()
+
+func get_color_mat(co: Color)->Material:
+	var mat = StandardMaterial3D.new()
+	mat.albedo_color = co
+	mat.metallic = 1
+	mat.clearcoat = true
+	return mat
+
