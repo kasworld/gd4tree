@@ -85,6 +85,15 @@ func update_bar_color() -> void:
 		var rate = float(i)/bar_count
 		var rev_rate = 1 - rate
 		multimesh.set_instance_color(i,color_from.lerp(color_to,rate))
+		
+func set_visible_bar_count(bar_count_a :int) -> void:
+	assert(bar_count_a >= 0)
+	bar_count = bar_count_a
+	assert(multimesh.instance_count >= bar_count)
+	multimesh.visible_instance_count = bar_count
+	update_bar_transform()
+	if use_color:
+		update_bar_color()
 
 func _process(_delta: float) -> void:
 	if auto_rotate_bar:

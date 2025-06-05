@@ -17,7 +17,7 @@ func _ready() -> void:
 
 func make_tree(btt:int, p :Vector3, wmax:float, hmax:float)->BarTree2:
 	var t = tree2_scene.instantiate()
-	add_child(t)
+	$BarTreeContainer.add_child(t)
 	t.position = p
 	var tree_width := randf_range(wmax*0.5,wmax*1.0)
 	var tree_height := randf_range(hmax*0.5,hmax*1.0)
@@ -50,6 +50,8 @@ func _process(delta: float) -> void:
 
 var key2fn = {
 	KEY_ESCAPE:_on_button_esc_pressed,
+	KEY_UP: _on_button_key_up_pressed,
+	KEY_DOWN: _on_button_key_down_pressed,
 }
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -62,3 +64,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _on_button_esc_pressed() -> void:
 	get_tree().quit()
+
+func _on_button_key_up_pressed() -> void:
+	for bt in $BarTreeContainer.get_children():
+		bt.set_visible_bar_count(bt.bar_count +1)
+	
+func _on_button_key_down_pressed() -> void:
+	for bt in $BarTreeContainer.get_children():
+		bt.set_visible_bar_count(bt.bar_count -1)
