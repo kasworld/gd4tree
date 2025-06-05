@@ -1,6 +1,5 @@
 extends Node3D
 
-var tree_scene = preload("res://bar_tree/bar_tree.tscn")
 var tree2_scene = preload("res://bar_tree_2/bar_tree_2.tscn")
 var brown_img = preload("res://image/Dark-brown-fine-wood-texture.jpg")
 var floor_img = preload("res://image/floorwood.jpg")
