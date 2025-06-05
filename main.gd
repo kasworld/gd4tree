@@ -24,7 +24,7 @@ func make_tree(btt:int, p :Vector3, wmax:float, hmax:float)->BarTree2:
 	var bar_width := tree_width * randf_range(0.5 , 2.0)/10
 	var bar_count := randf_range(5,100)
 	var bar_rotation := 0.1
-	var bar_shift_rate = [-1.0,0.0,1.0].pick_random()
+	var bar_shift_rate = [0.0, 0.5, 1.0, 1.5, 2.0].pick_random()
 	t.init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_shift_rate, true)
 	match btt:
 		0:
