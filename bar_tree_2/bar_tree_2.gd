@@ -7,6 +7,7 @@ var tree_height :float = 1.6
 var bar_width :float = 3.0
 var bar_count :int = 100
 var bar_rotation :float = 5.0
+var bar_shift_rate := 0.0
 var auto_rotate_bar :bool
 var multi_bar :MultiMeshInstance3D
 var multimesh :MultiMesh
@@ -14,13 +15,14 @@ var use_color :bool
 var color_from :Color
 var color_to :Color
 
-func init_common_params(w: float, h :float, bar_w :float, b_count:int, rot_vel :float, autorot:bool) -> BarTree2:
-	tree_height = h
-	tree_width = w
-	bar_width = bar_w
-	bar_count = b_count
-	bar_rotation = rot_vel
-	auto_rotate_bar = autorot
+func init_common_params(tree_width_a: float, tree_height_a :float, bar_width_a :float, bar_count_a:int, bar_rotation_a :float, bar_shift_rate_a :float, auto_rotate_bar_a:bool) -> BarTree2:
+	tree_height = tree_height_a
+	tree_width = tree_width_a
+	bar_width = bar_width_a
+	bar_count = bar_count_a
+	bar_rotation = bar_rotation_a
+	bar_shift_rate = bar_shift_rate_a
+	auto_rotate_bar = auto_rotate_bar_a
 	return self	
 
 func init_with_color(co1 :Color, co2:Color) -> BarTree2:
@@ -67,7 +69,8 @@ func update_bar_transform() -> void:
 	for i in multimesh.visible_instance_count:
 		var rate = float(i)/bar_count
 		var rev_rate = 1 - rate
-		var bar_position = Vector3(0, i *bar_height +bar_height/2, 0)
+		var bar_position = Vector3(0, i *bar_height +bar_height/2, tree_width * rev_rate /2 * bar_shift_rate)
+		#var bar_position = Vector3(0, i *bar_height +bar_height/2, 0)
 		var bar_size = Vector3(bar_width * rev_rate, bar_height, tree_width * rev_rate )
 		var bar_rot = bar_rotation * rate
 		var t = Transform3D(Basis(), bar_position)

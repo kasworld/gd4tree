@@ -8,7 +8,6 @@ var leaf_img = preload("res://image/leaf.png")
 
 func _ready() -> void:
 	$DirectionalLight3D.look_at(Vector3.ZERO)
-
 	var n := 4
 	var rd := 2*PI/n
 	var r := 2.0
@@ -20,22 +19,25 @@ func make_tree(btt:int, p :Vector3, wmax:float, hmax:float)->BarTree2:
 	var t = tree2_scene.instantiate()
 	add_child(t)
 	t.position = p
-	var w = randf_range(wmax*0.5,wmax*1.0)
-	var h = randf_range(hmax*0.5,hmax*1.0)
-	var bw = w * randf_range(0.5 , 2.0)/10
-	var bc = randf_range(5,20)
+	var tree_width := randf_range(wmax*0.5,wmax*1.0)
+	var tree_height := randf_range(hmax*0.5,hmax*1.0)
+	var bar_width := tree_width * randf_range(0.5 , 2.0)/10
+	var bar_count := randf_range(5,100)
+	var bar_rotation := 0.1
+	var bar_shift_rate := randfn(0,0.5)
+	t.init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_shift_rate, true)
 	match btt:
 		0:
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = floor_img
-			t.init_common_params(w,h, bw, h*bc, 0.1, true).init_with_material(mat)
+			t.init_with_material(mat)
 		1:
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = leaf_img
 			mat.uv1_triplanar = true
-			t.init_common_params(w,h, bw, h*bc, 0.1, true).init_with_material(mat)
+			t.init_with_material(mat)
 		_:
-			t.init_common_params(w,h, bw, h*bc, 0.1, true).init_with_color(random_color(), random_color())
+			t.init_with_color(random_color(), random_color())
 	return t
 
 func random_color()->Color:
