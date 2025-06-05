@@ -14,14 +14,16 @@ var use_color :bool
 var color_from :Color
 var color_to :Color
 
-func init_with_color(co1 :Color, co2:Color,
-		w: float, h :float, bar_w :float, b_count:int, rot_vel :float, autorot:bool) -> BarTree2:
+func init_common_params(w: float, h :float, bar_w :float, b_count:int, rot_vel :float, autorot:bool) -> BarTree2:
 	tree_height = h
 	tree_width = w
 	bar_width = bar_w
 	bar_count = b_count
 	bar_rotation = rot_vel
 	auto_rotate_bar = autorot
+	return self	
+
+func init_with_color(co1 :Color, co2:Color) -> BarTree2:
 	use_color = true
 	color_from = co1
 	color_to = co2
@@ -37,15 +39,7 @@ func init_with_color(co1 :Color, co2:Color,
 	update_bar_color()
 	return self
 
-func init_with_material(mat :Material,
-		w: float, h :float, bar_w :float, b_count:int, rot_vel :float, autorot:bool) -> BarTree2:
-	tree_height = h
-	tree_width = w
-	bar_width = bar_w
-	bar_count = b_count
-	bar_rotation = rot_vel
-	auto_rotate_bar = autorot
-	
+func init_with_material(mat :Material) -> BarTree2:
 	init_mesh_multi1(mat)
 	# Then resize (otherwise, changing the format is not allowed).
 	init_mesh_multi2()

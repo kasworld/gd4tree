@@ -28,14 +28,14 @@ func make_tree(btt:int, p :Vector3, wmax:float, hmax:float)->BarTree2:
 		0:
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = floor_img
-			t.init_with_material(mat,w,h, bw, h*bc, 0.1, true)
+			t.init_common_params(w,h, bw, h*bc, 0.1, true).init_with_material(mat)
 		1:
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = leaf_img
 			mat.uv1_triplanar = true
-			t.init_with_material(mat,w,h, bw, h*bc, 0.1, true)
+			t.init_common_params(w,h, bw, h*bc, 0.1, true).init_with_material(mat)
 		_:
-			t.init_with_color(random_color(), random_color(), w,h, bw, h*bc, 0.1, true)
+			t.init_common_params(w,h, bw, h*bc, 0.1, true).init_with_color(random_color(), random_color())
 	return t
 
 func random_color()->Color:
