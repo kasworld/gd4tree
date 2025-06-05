@@ -95,6 +95,13 @@ func set_visible_bar_count(bar_count_a :int) -> void:
 	if use_color:
 		update_bar_color()
 
+func set_bar_color(co1 :Color, co2:Color) -> void:
+	assert(use_color)
+	use_color = true
+	color_from = co1
+	color_to = co2
+	update_bar_color()
+
 func _process(_delta: float) -> void:
 	if auto_rotate_bar:
 		bar_rotation_y()
