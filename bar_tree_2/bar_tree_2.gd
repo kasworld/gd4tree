@@ -69,7 +69,8 @@ func update_bar_transform() -> void:
 	for i in multimesh.visible_instance_count:
 		var rate = float(i)/bar_count
 		var rev_rate = 1 - rate
-		var bar_position = Vector3(bar_width*rev_rate/2, i *bar_height +bar_height/2, tree_width * rev_rate /2 * bar_shift_rate)
+		var bar_position = Vector3(0, i *bar_height +bar_height/2, tree_width * rev_rate /2 * bar_shift_rate)
+		#var bar_position = Vector3(bar_width*rev_rate/2, i *bar_height +bar_height/2, tree_width * rev_rate /2 * bar_shift_rate)
 		var bar_size = Vector3(bar_width * rev_rate, bar_height, tree_width * rev_rate )
 		var bar_rot = bar_rotation * rate
 		var t = Transform3D(Basis(), bar_position)
