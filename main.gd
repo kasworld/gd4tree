@@ -51,7 +51,11 @@ var key2fn = {
 	KEY_ESCAPE:_on_button_esc_pressed,
 	KEY_UP: _on_button_key_up_pressed,
 	KEY_DOWN: _on_button_key_down_pressed,
+	KEY_RIGHT: _on_button_key_right_pressed,
+	KEY_LEFT: _on_button_key_left_pressed,
 	KEY_C:  _on_button_key_c_pressed,
+	KEY_SPACE: _on_button_key_space_pressed,
+	KEY_ENTER: _on_button_key_enter_pressed,
 }
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -73,7 +77,23 @@ func _on_button_key_down_pressed() -> void:
 	for bt in $BarTreeContainer.get_children():
 		bt.set_visible_bar_count(bt.bar_count -1)
 
+func _on_button_key_right_pressed() -> void:
+	for bt in $BarTreeContainer.get_children():
+		bt.bar_rotation = abs(bt.bar_rotation)
+
+func _on_button_key_left_pressed() -> void:
+	for bt in $BarTreeContainer.get_children():
+		bt.bar_rotation = -abs(bt.bar_rotation)
+
 func _on_button_key_c_pressed() -> void:
 	for bt in $BarTreeContainer.get_children():
 		if bt.use_color:
 			bt.set_bar_color(random_color(), random_color())
+
+func _on_button_key_space_pressed() -> void:
+	for bt in $BarTreeContainer.get_children():
+		bt.auto_rotate_bar = not bt.auto_rotate_bar
+
+func _on_button_key_enter_pressed() -> void:
+	for bt in $BarTreeContainer.get_children():
+		bt.update_bar_transform()
