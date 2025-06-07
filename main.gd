@@ -15,27 +15,31 @@ func _ready() -> void:
 
 	$Floor.mesh.size = field_size
 	$OmniLight3D.position.y = field_size.length()
-	$DirectionalLight3D.position = Vector3(field_size.x, field_size.length(), field_size.y )
+	$DirectionalLight3D.position = Vector3(field_size.x/2, field_size.length(), field_size.y/2 )
 	$DirectionalLight3D.look_at(Vector3.ZERO)
-	var n := 4
-	var rd := 2*PI/n
-	var r := 2.0
+	var n := 16
 	for i in n:
-		var pos = Vector3(sin(rd*i)*r, 0 , cos(rd*i)*r)
-		make_tree(i, pos, 2,2)
+		make_tree(i,n)
 
-func make_tree(btt:int, p :Vector3, wmax:float, hmax:float)->BarTree2:
+func make_tree(i :int, n:int)->BarTree2:
+	var sqrtn :int = sqrt(n)
+	var wmax := field_size.x /sqrtn
+	var hmax := field_size.x /sqrtn
+	var x = (i / sqrtn) / float(sqrtn-1) - 0.5
+	var y = (i % sqrtn) / float(sqrtn-1) - 0.5
+	print(x," ", y)
+	var pos = Vector3( x*field_size.x, 0, y*field_size.y )
 	var t = tree2_scene.instantiate()
 	$BarTreeContainer.add_child(t)
-	t.position = p
-	var tree_width := randf_range(wmax*0.5,wmax*1.0)
+	t.position = pos
+	var bar_shift_rate = [0.0, 0.5, 1.0, 1.5, 2.0].pick_random()
+	var tree_width = randf_range(wmax*0.5,wmax*1.0) / (bar_shift_rate+1)
 	var tree_height := randf_range(hmax*0.5,hmax*1.0)
-	var bar_width := tree_width * randf_range(0.5 , 2.0)/10
+	var bar_width = tree_width * randf_range(0.5 , 2.0)/10
 	var bar_count := randf_range(5,100)
 	var bar_rotation := 0.1
-	var bar_shift_rate = [0.0, 0.5, 1.0, 1.5, 2.0].pick_random()
 	t.init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, randf_range(0,2*PI), bar_shift_rate, true)
-	match btt:
+	match i:
 		0:
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = floor_img
