@@ -77,14 +77,14 @@ layout_mode = 2
 text = "재정렬하기"
 alignment = 2
 
-[node name="Control" type="Control" parent="오른쪽패널"]
-layout_mode = 2
-size_flags_vertical = 3
-
 [node name="색깔바꾸기" type="Button" parent="오른쪽패널"]
 layout_mode = 2
 text = "색깔바꾸기"
 alignment = 2
+
+[node name="Control" type="Control" parent="오른쪽패널"]
+layout_mode = 2
+size_flags_vertical = 3
 
 [connection signal="pressed" from="오른쪽패널/막대기수늘리기" to="." method="_on_막대기수늘리기_pressed"]
 [connection signal="pressed" from="오른쪽패널/막대기수줄이기" to="." method="_on_막대기수줄이기_pressed"]
