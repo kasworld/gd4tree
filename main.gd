@@ -17,7 +17,7 @@ func _ready() -> void:
 	$OmniLight3D.position.y = field_size.length()
 	$DirectionalLight3D.position = Vector3(field_size.x/2, field_size.length(), field_size.y/2 )
 	$DirectionalLight3D.look_at(Vector3.ZERO)
-	var n := 16
+	var n := 64
 	for i in n:
 		make_tree(i,n)
 
@@ -30,7 +30,7 @@ func make_tree(i :int, n:int)->BarTree2:
 	var yi :int = (i % sqrtn) 
 	var y = yi / float(sqrtn-1) - 0.5
 	print(xi," ", yi)
-	var pos = Vector3( x*field_size.x*0.8, 0, y*field_size.y*0.8 )
+	var pos = Vector3( x*field_size.x*0.9, 0, y*field_size.y*0.9 )
 	var t = tree2_scene.instantiate()
 	$BarTreeContainer.add_child(t)
 	t.position = pos
