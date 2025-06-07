@@ -6,6 +6,11 @@ var floor_img = preload("res://image/floorwood.jpg")
 var leaf_img = preload("res://image/leaf.png")
 
 func _ready() -> void:
+	var vp_size = get_viewport().get_visible_rect().size
+	var 패널넖이 = vp_size.x/10
+	$오른쪽패널.size = Vector2(패널넖이, vp_size.y)
+	$오른쪽패널.position = Vector2(vp_size.x - 패널넖이, 0)
+
 	$DirectionalLight3D.look_at(Vector3.ZERO)
 	var n := 4
 	var rd := 2*PI/n
@@ -48,14 +53,14 @@ func _process(delta: float) -> void:
 	$Camera3D.look_at(Vector3.ZERO)
 
 var key2fn = {
-	KEY_ESCAPE:_on_button_esc_pressed,
-	KEY_UP: _on_button_key_up_pressed,
-	KEY_DOWN: _on_button_key_down_pressed,
-	KEY_RIGHT: _on_button_key_right_pressed,
-	KEY_LEFT: _on_button_key_left_pressed,
-	KEY_C:  _on_button_key_c_pressed,
-	KEY_SPACE: _on_button_key_space_pressed,
-	KEY_ENTER: _on_button_key_enter_pressed,
+	KEY_ESCAPE: _on_button_esc_pressed,
+	KEY_UP: _on_막대기수늘리기_pressed,
+	KEY_DOWN: _on_막대기수줄이기_pressed,
+	KEY_RIGHT: _on_오른쪽으로돌리기_pressed,
+	KEY_LEFT: _on_왼쪽으로돌리기_pressed,
+	KEY_C: _on_색깔바꾸기_pressed,
+	KEY_SPACE: _on_멈추기_pressed,
+	KEY_ENTER: _on_재정렬하기_pressed,
 }
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -69,31 +74,31 @@ func _unhandled_input(event: InputEvent) -> void:
 func _on_button_esc_pressed() -> void:
 	get_tree().quit()
 
-func _on_button_key_up_pressed() -> void:
+func _on_막대기수늘리기_pressed() -> void:
 	for bt in $BarTreeContainer.get_children():
 		bt.set_visible_bar_count(bt.bar_count +1)
-	
-func _on_button_key_down_pressed() -> void:
+
+func _on_막대기수줄이기_pressed() -> void:
 	for bt in $BarTreeContainer.get_children():
 		bt.set_visible_bar_count(bt.bar_count -1)
 
-func _on_button_key_right_pressed() -> void:
+func _on_오른쪽으로돌리기_pressed() -> void:
 	for bt in $BarTreeContainer.get_children():
 		bt.bar_rotation = abs(bt.bar_rotation)
 
-func _on_button_key_left_pressed() -> void:
+func _on_왼쪽으로돌리기_pressed() -> void:
 	for bt in $BarTreeContainer.get_children():
 		bt.bar_rotation = -abs(bt.bar_rotation)
 
-func _on_button_key_c_pressed() -> void:
-	for bt in $BarTreeContainer.get_children():
-		if bt.use_color:
-			bt.set_bar_color(random_color(), random_color())
-
-func _on_button_key_space_pressed() -> void:
+func _on_멈추기_pressed() -> void:
 	for bt in $BarTreeContainer.get_children():
 		bt.auto_rotate_bar = not bt.auto_rotate_bar
 
-func _on_button_key_enter_pressed() -> void:
+func _on_재정렬하기_pressed() -> void:
 	for bt in $BarTreeContainer.get_children():
 		bt.update_bar_transform()
+
+func _on_색깔바꾸기_pressed() -> void:
+	for bt in $BarTreeContainer.get_children():
+		if bt.use_color:
+			bt.set_bar_color(random_color(), random_color())

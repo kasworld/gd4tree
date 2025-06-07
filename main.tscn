@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://1o57d228fylb"]
+[gd_scene load_steps=6 format=3 uid="uid://1o57d228fylb"]
 
 [ext_resource type="Script" uid="uid://jgyppeev7bjw" path="res://main.gd" id="1_atpxs"]
 [ext_resource type="Texture2D" uid="uid://bhmbb7tlw5j3a" path="res://image/Dark-brown-fine-wood-texture.jpg" id="2_jkwbg"]
@@ -15,6 +15,9 @@ grow_amount = -2.547
 lightmap_size_hint = Vector2i(32, 32)
 material = SubResource("StandardMaterial3D_668xm")
 size = Vector2(6, 6)
+
+[sub_resource type="Theme" id="Theme_0xm2m"]
+default_font_size = 36
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_atpxs")
@@ -37,3 +40,56 @@ shadow_enabled = true
 omni_range = 100.0
 
 [node name="BarTreeContainer" type="Node3D" parent="."]
+
+[node name="오른쪽패널" type="VBoxContainer" parent="."]
+modulate = Color(1, 1, 1, 0.498039)
+offset_right = 40.0
+offset_bottom = 40.0
+theme = SubResource("Theme_0xm2m")
+
+[node name="막대기수늘리기" type="Button" parent="오른쪽패널"]
+layout_mode = 2
+text = "막대기수늘리기"
+alignment = 2
+
+[node name="막대기수줄이기" type="Button" parent="오른쪽패널"]
+layout_mode = 2
+text = "막대기수줄이기"
+alignment = 2
+
+[node name="오른쪽으로돌리기" type="Button" parent="오른쪽패널"]
+layout_mode = 2
+text = "오른쪽으로돌리기"
+alignment = 2
+
+[node name="왼쪽으로돌리기" type="Button" parent="오른쪽패널"]
+layout_mode = 2
+text = "왼쪽으로돌리기"
+alignment = 2
+
+[node name="멈추기" type="Button" parent="오른쪽패널"]
+layout_mode = 2
+text = "멈추기"
+alignment = 2
+
+[node name="재정렬하기" type="Button" parent="오른쪽패널"]
+layout_mode = 2
+text = "재정렬하기"
+alignment = 2
+
+[node name="Control" type="Control" parent="오른쪽패널"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="색깔바꾸기" type="Button" parent="오른쪽패널"]
+layout_mode = 2
+text = "색깔바꾸기"
+alignment = 2
+
+[connection signal="pressed" from="오른쪽패널/막대기수늘리기" to="." method="_on_막대기수늘리기_pressed"]
+[connection signal="pressed" from="오른쪽패널/막대기수줄이기" to="." method="_on_막대기수줄이기_pressed"]
+[connection signal="pressed" from="오른쪽패널/오른쪽으로돌리기" to="." method="_on_오른쪽으로돌리기_pressed"]
+[connection signal="pressed" from="오른쪽패널/왼쪽으로돌리기" to="." method="_on_왼쪽으로돌리기_pressed"]
+[connection signal="pressed" from="오른쪽패널/멈추기" to="." method="_on_멈추기_pressed"]
+[connection signal="pressed" from="오른쪽패널/재정렬하기" to="." method="_on_재정렬하기_pressed"]
+[connection signal="pressed" from="오른쪽패널/색깔바꾸기" to="." method="_on_색깔바꾸기_pressed"]
