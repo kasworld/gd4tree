@@ -5,12 +5,17 @@ var brown_img = preload("res://image/Dark-brown-fine-wood-texture.jpg")
 var floor_img = preload("res://image/floorwood.jpg")
 var leaf_img = preload("res://image/leaf.png")
 
+var field_size := Vector2(10,10)
+
 func _ready() -> void:
 	var vp_size = get_viewport().get_visible_rect().size
 	var 패널넖이 = vp_size.x/10
 	$오른쪽패널.size = Vector2(패널넖이, vp_size.y)
 	$오른쪽패널.position = Vector2(vp_size.x - 패널넖이, 0)
 
+	$Floor.mesh.size = field_size
+	$OmniLight3D.position.y = field_size.length()
+	$DirectionalLight3D.position = Vector3(field_size.x, field_size.length(), field_size.y )
 	$DirectionalLight3D.look_at(Vector3.ZERO)
 	var n := 4
 	var rd := 2*PI/n
@@ -49,7 +54,7 @@ func random_color()->Color:
 
 func _process(delta: float) -> void:
 	var t = Time.get_unix_time_from_system() /10
-	$Camera3D.position = Vector3(sin(t)*2.5 ,2.5, cos(t)*2.5  )
+	$Camera3D.position = Vector3(sin(t)*field_size.length()/3 ,field_size.length()/3, cos(t)*field_size.length()/3  )
 	$Camera3D.look_at(Vector3.ZERO)
 
 var key2fn = {
