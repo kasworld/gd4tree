@@ -43,7 +43,7 @@ func make_tree(i :int, n:int)->BarTree2:
 	var tree_width = randf_range(wmax*0.5,wmax*1.0)/3
 	var tree_height := randf_range(hmax*0.5,hmax*1.0)
 	var bar_width = tree_width * randf_range(0.5 , 2.0)/10
-	var bar_count := randf_range(5,100)
+	var bar_count := randf_range(5,200)
 	var bar_rotation := 0.1
 	var bar_rotation_begin := randf_range(0,2*PI)
 	var type_make = [0,1,2,2].pick_random()
@@ -52,7 +52,7 @@ func make_tree(i :int, n:int)->BarTree2:
 	var t :BarTree2	
 	# add left side 
 	if make_flag & (1<<0) != 0:
-		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_rotation_begin, 2.0, true)
+		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, bar_count, bar_rotation, bar_rotation_begin, 2.0, true)
 		$BarTreeContainer.add_child(t)
 		t.position = pos
 		type_make = [0,1,2,2].pick_random()
@@ -60,7 +60,7 @@ func make_tree(i :int, n:int)->BarTree2:
 
 	# add right side 
 	if make_flag & (1<<1) != 0:
-		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_rotation_begin , -2.0, true)
+		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, bar_count, bar_rotation, bar_rotation_begin , -2.0, true)
 		$BarTreeContainer.add_child(t)
 		t.position = pos
 		type_make = [0,1,2,2].pick_random()
@@ -72,7 +72,7 @@ func make_tree(i :int, n:int)->BarTree2:
 			tree_width *= 3
 		else:
 			tree_width *= 0.9
-		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_rotation_begin, 0, true)
+		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, bar_count, bar_rotation, bar_rotation_begin, 0, true)
 		$BarTreeContainer.add_child(t)
 		t.position = pos
 		type_make = [0,1,2,2].pick_random()
