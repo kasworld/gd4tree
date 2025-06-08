@@ -17,7 +17,7 @@ func _ready() -> void:
 	$OmniLight3D.position.y = field_size.length()
 	$DirectionalLight3D.position = Vector3(field_size.x/2, field_size.length(), field_size.y/2 )
 	$DirectionalLight3D.look_at(Vector3.ZERO)
-	var n := 36
+	var n := 64
 	for i in n:
 		make_tree(i,n)
 
@@ -40,8 +40,8 @@ func make_tree(i :int, n:int)->BarTree2:
 	var sqrtn := sqrt(n)
 	var wmax := field_size.x /sqrtn
 	var hmax := field_size.x /sqrtn
-	var tree_width = randf_range(wmax*0.5,wmax*1.0)/3
-	var tree_height := randf_range(hmax*0.5,hmax*1.0)
+	var tree_width := wmax/3
+	var tree_height := hmax
 	var bar_width = tree_width * randf_range(0.5 , 2.0)/10
 	var bar_count := randf_range(5,200)
 	var bar_rotation := 0.1
