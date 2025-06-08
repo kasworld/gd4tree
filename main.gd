@@ -37,53 +37,64 @@ func calc_posf_by_i(i :int, n:int) -> Vector2:
 func make_tree(i :int, n:int)->BarTree2:
 	var posf := calc_posf_by_i(i,n)
 	var pos = Vector3( posf.x*field_size.x*0.9, 0, posf.y*field_size.y*0.9 )
-	var bar_shift_rate = [0.0, 1.0, 1.5, 2.0][i%4]
 	var sqrtn := sqrt(n)
 	var wmax := field_size.x /sqrtn
 	var hmax := field_size.x /sqrtn
-	var tree_width = randf_range(wmax*0.5,wmax*1.0) / (bar_shift_rate+1)
+	var tree_width = randf_range(wmax*0.5,wmax*1.0)/3
 	var tree_height := randf_range(hmax*0.5,hmax*1.0)
 	var bar_width = tree_width * randf_range(0.5 , 2.0)/10
 	var bar_count := randf_range(5,100)
 	var bar_rotation := 0.1
 	var bar_rotation_begin := randf_range(0,2*PI)
-	var t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_rotation_begin, bar_shift_rate, true)
-	$BarTreeContainer.add_child(t)
-	t.position = pos
-	var type_made := init_tree_material(i,t)
-	if bar_shift_rate >= 1.0 and randi_range(0,1) == 0:
-		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_rotation_begin +PI, bar_shift_rate, true)
+	var type_make = [0,1,2,2].pick_random()
+
+	var make_flag := randi_range(1,7)
+	var t :BarTree2	
+	# add left side 
+	if make_flag & (1<<0) != 0:
+		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_rotation_begin, 2.0, true)
 		$BarTreeContainer.add_child(t)
 		t.position = pos
-		var type_make = 2
-		if type_made == 0:
-			type_make = [1,2].pick_random()
-		elif type_made == 1:
-			type_make = [0,2].pick_random()
+		type_make = [0,1,2,2].pick_random()
 		init_tree_material(type_make,t)
-	if bar_shift_rate == 2.0 and randi_range(0,1) == 0:
-		t = tree2_scene.instantiate().init_common_params(tree_width*0.9, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_rotation_begin +PI, 0, true)
+
+	# add right side 
+	if make_flag & (1<<1) != 0:
+		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_rotation_begin , -2.0, true)
 		$BarTreeContainer.add_child(t)
 		t.position = pos
-		init_tree_material(randi_range(0,3),t)
+		type_make = [0,1,2,2].pick_random()
+		init_tree_material(type_make,t)
+
+	# add center 
+	if make_flag & (1<<2) != 0:
+		if make_flag == (1<<2):
+			tree_width *= 3
+		else:
+			tree_width *= 0.9
+		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_rotation_begin, 0, true)
+		$BarTreeContainer.add_child(t)
+		t.position = pos
+		type_make = [0,1,2,2].pick_random()
+		init_tree_material(type_make,t)
+
 	return t
 
-func init_tree_material(i :int, t:BarTree2) -> int:
-	match i % 4:
+func init_tree_material(i :int, t:BarTree2):
+	match i :
 		0:
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = floor_img
 			t.init_with_material(mat)
-			return 0
 		1:
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = leaf_img
 			mat.uv1_triplanar = true
 			t.init_with_material(mat)
-			return 1
-		_:
+		2:
 			t.init_with_color(random_color(), random_color())
-			return 2
+		_:
+			assert(false)
 
 func random_color()->Color:
 	return Color(randf(),randf(),randf())
