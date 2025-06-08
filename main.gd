@@ -37,7 +37,7 @@ func calc_posf_by_i(i :int, n:int) -> Vector2:
 func make_tree(i :int, n:int)->BarTree2:
 	var posf := calc_posf_by_i(i,n)
 	var pos = Vector3( posf.x*field_size.x*0.9, 0, posf.y*field_size.y*0.9 )
-	var bar_shift_rate = [0.0, 0.5, 1.0, 1.5, 2.0][i%5]
+	var bar_shift_rate = [0.0, 1.0, 1.5, 2.0][i%4]
 	var sqrtn := sqrt(n)
 	var wmax := field_size.x /sqrtn
 	var hmax := field_size.x /sqrtn
@@ -50,12 +50,17 @@ func make_tree(i :int, n:int)->BarTree2:
 	var t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_rotation_begin, bar_shift_rate, true)
 	$BarTreeContainer.add_child(t)
 	t.position = pos
-	var is_color_mat := init_tree_material(i,t)
-	if is_color_mat and bar_shift_rate >= 1.0 and randi_range(0,1) == 0:
+	var type_made := init_tree_material(i,t)
+	if bar_shift_rate >= 1.0 and randi_range(0,1) == 0:
 		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_rotation_begin +PI, bar_shift_rate, true)
 		$BarTreeContainer.add_child(t)
 		t.position = pos
-		init_tree_material(i,t)
+		var type_make = 2
+		if type_made == 0:
+			type_make = [1,2].pick_random()
+		elif type_made == 1:
+			type_make = [0,2].pick_random()
+		init_tree_material(type_make,t)
 	if bar_shift_rate == 2.0 and randi_range(0,1) == 0:
 		t = tree2_scene.instantiate().init_common_params(tree_width*0.9, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_rotation_begin +PI, 0, true)
 		$BarTreeContainer.add_child(t)
@@ -63,22 +68,22 @@ func make_tree(i :int, n:int)->BarTree2:
 		init_tree_material(randi_range(0,3),t)
 	return t
 
-func init_tree_material(i :int, t:BarTree2) -> bool:
+func init_tree_material(i :int, t:BarTree2) -> int:
 	match i % 4:
 		0:
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = floor_img
 			t.init_with_material(mat)
-			return false
+			return 0
 		1:
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = leaf_img
 			mat.uv1_triplanar = true
 			t.init_with_material(mat)
-			return false
+			return 1
 		_:
 			t.init_with_color(random_color(), random_color())
-			return true
+			return 2
 
 func random_color()->Color:
 	return Color(randf(),randf(),randf())
