@@ -46,23 +46,39 @@ func make_tree(i :int, n:int)->BarTree2:
 	var bar_width = tree_width * randf_range(0.5 , 2.0)/10
 	var bar_count := randf_range(5,100)
 	var bar_rotation := 0.1
-	var t = tree2_scene.instantiate()
+	var bar_rotation_begin := randf_range(0,2*PI)
+	var t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_rotation_begin, bar_shift_rate, true)
 	$BarTreeContainer.add_child(t)
 	t.position = pos
-	t.init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, randf_range(0,2*PI), bar_shift_rate, true)
+	var is_color_mat := init_tree_material(i,t)
+	if is_color_mat and bar_shift_rate >= 1.0 and randi_range(0,1) == 0:
+		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_rotation_begin +PI, bar_shift_rate, true)
+		$BarTreeContainer.add_child(t)
+		t.position = pos
+		init_tree_material(i,t)
+	elif bar_shift_rate == 2.0 and randi_range(0,1) == 0:
+		t = tree2_scene.instantiate().init_common_params(tree_width*0.9, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_rotation_begin +PI, 0, true)
+		$BarTreeContainer.add_child(t)
+		t.position = pos
+		init_tree_material(randi_range(0,3),t)
+	return t
+
+func init_tree_material(i :int, t:BarTree2) -> bool:
 	match i % 4:
 		0:
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = floor_img
 			t.init_with_material(mat)
+			return false
 		1:
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = leaf_img
 			mat.uv1_triplanar = true
 			t.init_with_material(mat)
+			return false
 		_:
 			t.init_with_color(random_color(), random_color())
-	return t
+			return true
 
 func random_color()->Color:
 	return Color(randf(),randf(),randf())
