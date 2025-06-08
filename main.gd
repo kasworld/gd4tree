@@ -56,7 +56,7 @@ func make_tree(i :int, n:int)->BarTree2:
 		$BarTreeContainer.add_child(t)
 		t.position = pos
 		init_tree_material(i,t)
-	elif bar_shift_rate == 2.0 and randi_range(0,1) == 0:
+	if bar_shift_rate == 2.0 and randi_range(0,1) == 0:
 		t = tree2_scene.instantiate().init_common_params(tree_width*0.9, tree_height, bar_width, tree_height*bar_count, bar_rotation, bar_rotation_begin +PI, 0, true)
 		$BarTreeContainer.add_child(t)
 		t.position = pos
