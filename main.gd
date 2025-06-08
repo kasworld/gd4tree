@@ -17,29 +17,38 @@ func _ready() -> void:
 	$OmniLight3D.position.y = field_size.length()
 	$DirectionalLight3D.position = Vector3(field_size.x/2, field_size.length(), field_size.y/2 )
 	$DirectionalLight3D.look_at(Vector3.ZERO)
-	var n := 64
+	var n := 36
 	for i in n:
 		make_tree(i,n)
 
-func make_tree(i :int, n:int)->BarTree2:
+func calc_posi_by_i(i :int, n:int) -> Vector2i:
 	var sqrtn :int = sqrt(n)
+	var rtn = Vector2i(i / sqrtn, i % sqrtn)
+	#print(rtn)
+	return rtn
+
+func calc_posf_by_i(i :int, n:int) -> Vector2:
+	var sqrtni :int = sqrt(n)
+	var posi := calc_posi_by_i(i,n)
+	var x = posi.x / float(sqrtni-1) - 0.5
+	var y = posi.y / float(sqrtni-1) - 0.5
+	return Vector2(x,y)
+
+func make_tree(i :int, n:int)->BarTree2:
+	var posf := calc_posf_by_i(i,n)
+	var pos = Vector3( posf.x*field_size.x*0.9, 0, posf.y*field_size.y*0.9 )
+	var bar_shift_rate = [0.0, 0.5, 1.0, 1.5, 2.0][i%5]
+	var sqrtn := sqrt(n)
 	var wmax := field_size.x /sqrtn
 	var hmax := field_size.x /sqrtn
-	var xi :int = (i / sqrtn) 
-	var x = xi / float(sqrtn-1) - 0.5
-	var yi :int = (i % sqrtn) 
-	var y = yi / float(sqrtn-1) - 0.5
-	print(xi," ", yi)
-	var pos = Vector3( x*field_size.x*0.9, 0, y*field_size.y*0.9 )
-	var t = tree2_scene.instantiate()
-	$BarTreeContainer.add_child(t)
-	t.position = pos
-	var bar_shift_rate = [0.0, 0.5, 1.0, 1.5, 2.0][i%5]
 	var tree_width = randf_range(wmax*0.5,wmax*1.0) / (bar_shift_rate+1)
 	var tree_height := randf_range(hmax*0.5,hmax*1.0)
 	var bar_width = tree_width * randf_range(0.5 , 2.0)/10
 	var bar_count := randf_range(5,100)
 	var bar_rotation := 0.1
+	var t = tree2_scene.instantiate()
+	$BarTreeContainer.add_child(t)
+	t.position = pos
 	t.init_common_params(tree_width, tree_height, bar_width, tree_height*bar_count, bar_rotation, randf_range(0,2*PI), bar_shift_rate, true)
 	match i % 4:
 		0:
@@ -58,7 +67,7 @@ func make_tree(i :int, n:int)->BarTree2:
 func random_color()->Color:
 	return Color(randf(),randf(),randf())
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	var t = Time.get_unix_time_from_system() /10
 	$Camera3D.position = Vector3(sin(t)*field_size.length()/3 ,field_size.length()/3, cos(t)*field_size.length()/3  )
 	$Camera3D.look_at(Vector3.ZERO)
