@@ -17,29 +17,26 @@ func _ready() -> void:
 	$OmniLight3D.position.y = field_size.length()
 	$DirectionalLight3D.position = Vector3(field_size.x/2, field_size.length(), field_size.y/2 )
 	$DirectionalLight3D.look_at(Vector3.ZERO)
-	var n := 64
-	for i in n:
-		make_tree(i,n)
 
-func calc_posi_by_i(i :int, n:int) -> Vector2i:
-	var sqrtn :int = sqrt(n)
-	var rtn = Vector2i(i / sqrtn, i % sqrtn)
-	#print(rtn)
-	return rtn
+	var xn = 8
+	var yn = 8
+	for i in xn*yn:
+		var r = min( field_size.x / xn, field_size.y / yn )
+		var adjust = Vector2( 1.0- r/field_size.x , 1.0- r/field_size.y )
+		var pos = calc_posf_by_i(i, xn, yn)
+		make_tree(i,r,r,Vector3(pos.y*field_size.y*adjust.y , 0, pos.x*field_size.x*adjust.x))
 
-func calc_posf_by_i(i :int, n:int) -> Vector2:
-	var sqrtni :int = sqrt(n)
-	var posi := calc_posi_by_i(i,n)
-	var x = posi.x / float(sqrtni-1) - 0.5
-	var y = posi.y / float(sqrtni-1) - 0.5
+
+func calc_posi_by_i(i :int, xn:int) -> Vector2i:
+	return Vector2i(i % xn, i / xn)
+
+func calc_posf_by_i(i :int, xn :int, yn :int) -> Vector2:
+	var posi := Vector2i(i % xn, i / xn)
+	var x = posi.x / float(xn-1) - 0.5
+	var y = posi.y / float(yn-1) - 0.5
 	return Vector2(x,y)
 
-func make_tree(i :int, n:int)->BarTree2:
-	var posf := calc_posf_by_i(i,n)
-	var pos = Vector3( posf.x*field_size.x*0.9, 0, posf.y*field_size.y*0.9 )
-	var sqrtn := sqrt(n)
-	var wmax := field_size.x /sqrtn
-	var hmax := field_size.x /sqrtn
+func make_tree(i :int, wmax :float, hmax :float, pos :Vector3)->BarTree2:
 	var tree_width := wmax/3
 	var tree_height := hmax
 	var bar_width = tree_width * randf_range(0.5 , 2.0)/10
