@@ -40,14 +40,14 @@ func make_tree(wmax :float, hmax :float, pos :Vector3)->BarTree2:
 	var tree_height := hmax
 	var bar_width = tree_width * randf_range(0.5 , 2.0)/10
 	var bar_count := randi_range(5,200)
-	var bar_rotation := 0.1
+	#var bar_rotation := 0.1
 	var type_make = [0,1,2,2].pick_random()
 
 	var make_flag := randi_range(1,7)
 	var t :BarTree2
 	# add left side
 	if make_flag & (1<<0) != 0:
-		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, bar_rotation, 2.0, true)
+		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, 2.0)
 		$BarTreeContainer.add_child(t)
 		t.position = pos
 		type_make = [0,1,2,2].pick_random()
@@ -55,7 +55,7 @@ func make_tree(wmax :float, hmax :float, pos :Vector3)->BarTree2:
 
 	# add right side
 	if make_flag & (1<<1) != 0:
-		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, bar_rotation, -2.0, true)
+		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, -2.0)
 		$BarTreeContainer.add_child(t)
 		t.position = pos
 		type_make = [0,1,2,2].pick_random()
@@ -67,7 +67,7 @@ func make_tree(wmax :float, hmax :float, pos :Vector3)->BarTree2:
 			tree_width *= 3
 		else:
 			tree_width *= 0.9
-		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, bar_rotation, 0, true)
+		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, 0)
 		$BarTreeContainer.add_child(t)
 		t.position = pos
 		type_make = [0,1,2,2].pick_random()
@@ -98,6 +98,8 @@ func _process(_delta: float) -> void:
 	var t = Time.get_unix_time_from_system() /10
 	$Camera3D.position = Vector3(sin(t)*field_size.length()/3 ,field_size.length()/3, cos(t)*field_size.length()/3  )
 	$Camera3D.look_at(Vector3.ZERO)
+	for n in $BarTreeContainer.get_children():
+		n.rotate_bar_y(0.1)
 
 var key2fn = {
 	KEY_ESCAPE: _on_button_esc_pressed,
