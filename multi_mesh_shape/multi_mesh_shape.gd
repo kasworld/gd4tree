@@ -26,6 +26,9 @@ func _set_count(count :int) -> void:
 	multimesh.instance_count = count
 	multimesh.visible_instance_count = count
 
+func color_used() -> bool:
+	return multimesh.use_colors
+
 func make_color_material(co :Color) -> StandardMaterial3D:
 	var mat := StandardMaterial3D.new()
 	# draw call 이 TRANSPARENCY_ALPHA 인 경우만 줄어든다. 버그인가?
