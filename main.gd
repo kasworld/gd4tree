@@ -46,8 +46,8 @@ func make_tree(i :int, wmax :float, hmax :float, pos :Vector3)->BarTree2:
 	var type_make = [0,1,2,2].pick_random()
 
 	var make_flag := randi_range(1,7)
-	var t :BarTree2	
-	# add left side 
+	var t :BarTree2
+	# add left side
 	if make_flag & (1<<0) != 0:
 		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, bar_count, bar_rotation, bar_rotation_begin, 2.0, true)
 		$BarTreeContainer.add_child(t)
@@ -55,7 +55,7 @@ func make_tree(i :int, wmax :float, hmax :float, pos :Vector3)->BarTree2:
 		type_make = [0,1,2,2].pick_random()
 		init_tree_material(type_make,t)
 
-	# add right side 
+	# add right side
 	if make_flag & (1<<1) != 0:
 		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, bar_count, bar_rotation, bar_rotation_begin , -2.0, true)
 		$BarTreeContainer.add_child(t)
@@ -63,7 +63,7 @@ func make_tree(i :int, wmax :float, hmax :float, pos :Vector3)->BarTree2:
 		type_make = [0,1,2,2].pick_random()
 		init_tree_material(type_make,t)
 
-	# add center 
+	# add center
 	if make_flag & (1<<2) != 0:
 		if make_flag == (1<<2):
 			tree_width *= 3
