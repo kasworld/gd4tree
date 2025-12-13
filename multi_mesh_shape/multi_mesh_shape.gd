@@ -1,14 +1,14 @@
 extends MultiMeshInstance3D
 class_name MultiMeshShape
 
-static func 집중선만들기(r :float, start:float, end:float, depth :float, count :int, co :Color , pos :Vector3) -> MultiMeshShape:
+static func 집중선만들기(r :float, start:float, end:float, depth :float, count :int, co :Color) -> MultiMeshShape:
 	var 구분선 := BoxMesh.new()
 	var 길이 := r*(end-start)
 	구분선.size = Vector3(길이, depth/10, depth )
 	var cell각도 := 2.0*PI / count
 	var radius := r-길이/2
 	var mms :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate().init_with_color(
-		구분선, Color.WHITE, count , pos)
+		구분선, Color.WHITE, count)
 	for i in count:
 		var rad := cell각도 *i + cell각도/2
 		mms.set_inst_rotation(i, Vector3.BACK, rad)
@@ -37,24 +37,23 @@ func make_color_material(co :Color) -> StandardMaterial3D:
 	mat.vertex_color_use_as_albedo = true
 	return mat
 
-func _set_position_all(pos :Vector3) -> void:
+func _init_transform() -> void:
 	for i in multimesh.visible_instance_count:
-		var t := Transform3D(Basis(), pos)
-		multimesh.set_instance_transform(i,t)
+		multimesh.set_instance_transform(i,Transform3D())
 
-func init_with_color(mesh :Mesh, co :Color, count :int, pos :Vector3) -> MultiMeshShape:
+func init_with_color(mesh :Mesh, co :Color, count :int) -> MultiMeshShape:
 	_init_multimesh(mesh, make_color_material(co))
 	multimesh.use_colors = true # before set instance_count
 	# Then resize (otherwise, changing the format is not allowed).
 	_set_count(count)
-	_set_position_all(pos)
+	_init_transform()
 	return self
 
-func init_with_material(mesh :Mesh, mat :Material, count :int, pos :Vector3) -> MultiMeshShape:
+func init_with_material(mesh :Mesh, mat :Material, count :int) -> MultiMeshShape:
 	_init_multimesh(mesh, mat)
 	# Then resize (otherwise, changing the format is not allowed).
 	_set_count(count)
-	_set_position_all(pos)
+	_init_transform()
 	return self
 
 

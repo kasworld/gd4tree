@@ -38,13 +38,13 @@ func init_with_color(co1 :Color, co2:Color) -> BarTree2:
 	color_from = co1
 	color_to = co2
 
-	$MultiMeshShape.init_with_color(BoxMesh.new(), Color.WHITE, bar_count, Vector3.ZERO)
+	$MultiMeshShape.init_with_color(BoxMesh.new(), Color.WHITE, bar_count)
 	update_bar_transform()
 	update_bar_color()
 	return self
 
 func init_with_material(mat :Material) -> BarTree2:
-	$MultiMeshShape.init_with_material(BoxMesh.new(), mat, bar_count, Vector3.ZERO)
+	$MultiMeshShape.init_with_material(BoxMesh.new(), mat, bar_count)
 	update_bar_transform()
 	return self
 
