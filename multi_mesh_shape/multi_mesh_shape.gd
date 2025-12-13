@@ -17,17 +17,14 @@ static func 집중선만들기(r :float, start:float, end:float, depth :float, c
 	return mms
 
 
-var m_mesh :MultiMesh
-
-func _init_m_mesh(mesh :Mesh, mat :Material) -> void:
+func _init_multimesh(mesh :Mesh, mat :Material) -> void:
 	mesh.material = mat
-	m_mesh = MultiMesh.new()
-	m_mesh.mesh = mesh
-	m_mesh.transform_format = MultiMesh.TRANSFORM_3D
+	multimesh.mesh = mesh
+	multimesh.transform_format = MultiMesh.TRANSFORM_3D
 
 func _set_count(count :int) -> void:
-	m_mesh.instance_count = count
-	m_mesh.visible_instance_count = count
+	multimesh.instance_count = count
+	multimesh.visible_instance_count = count
 
 func make_color_material(co :Color) -> StandardMaterial3D:
 	var mat := StandardMaterial3D.new()
@@ -41,44 +38,41 @@ func make_color_material(co :Color) -> StandardMaterial3D:
 	return mat
 
 func _set_position_all(pos :Vector3) -> void:
-	for i in m_mesh.visible_instance_count:
-		#m_mesh.set_instance_color(i,Color.WHITE)
+	for i in multimesh.visible_instance_count:
 		var t := Transform3D(Basis(), pos)
-		m_mesh.set_instance_transform(i,t)
+		multimesh.set_instance_transform(i,t)
 
 func init_with_color(mesh :Mesh, co :Color, count :int, pos :Vector3) -> MultiMeshShape:
-	_init_m_mesh(mesh, make_color_material(co))
-	m_mesh.use_colors = true # before set instance_count
+	_init_multimesh(mesh, make_color_material(co))
+	multimesh.use_colors = true # before set instance_count
 	# Then resize (otherwise, changing the format is not allowed).
 	_set_count(count)
-	multimesh = m_mesh
 	_set_position_all(pos)
 	return self
 
 func init_with_material(mesh :Mesh, mat :Material, count :int, pos :Vector3) -> MultiMeshShape:
-	_init_m_mesh(mesh, mat)
+	_init_multimesh(mesh, mat)
 	# Then resize (otherwise, changing the format is not allowed).
 	_set_count(count)
-	multimesh = m_mesh
 	_set_position_all(pos)
 	return self
 
 
 func set_visible_count(i :int) -> void:
-	m_mesh.visible_instance_count = i
+	multimesh.visible_instance_count = i
 
 func get_visible_count() -> int:
-	return m_mesh.visible_instance_count
+	return multimesh.visible_instance_count
 
 func set_inst_rotation(i :int, axis :Vector3, rot :float) -> void:
-	var t := m_mesh.get_instance_transform(i)
+	var t := multimesh.get_instance_transform(i)
 	t = t.rotated_local(axis, rot)
-	m_mesh.set_instance_transform(i,t )
+	multimesh.set_instance_transform(i,t )
 
 func set_inst_pos(i :int, pos :Vector3) -> void:
-	var t := m_mesh.get_instance_transform(i)
+	var t := multimesh.get_instance_transform(i)
 	t.origin = pos
-	m_mesh.set_instance_transform(i,t )
+	multimesh.set_instance_transform(i,t )
 
 func set_inst_color(i, co :Color) -> void:
-	m_mesh.set_instance_color(i,co)
+	multimesh.set_instance_color(i,co)
