@@ -17,7 +17,7 @@ func init_bar_transform(
 		tree_height :float,
 		bar_width :float,
 		bar_shift_rate :float,
-	) -> void:
+	) -> BarTree2:
 	var count :int = get_visible_count()
 	# Set the transform of the instances.
 	var bar_height := tree_height/count
@@ -29,6 +29,7 @@ func init_bar_transform(
 		var t := Transform3D(Basis(), bar_position)
 		t = t.scaled_local( bar_size )
 		multimesh.set_instance_transform(i,t )
+	return self
 
 func rotate_bar_y(bar_rotation :float) -> void:
 	var count :int = get_visible_count()
