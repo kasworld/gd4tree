@@ -58,6 +58,12 @@ func init_with_material(mesh :Mesh, mat :Material, count :int) -> MultiMeshShape
 func color_used() -> bool:
 	return multimesh.use_colors
 
+func set_gradient_color(color_from :Color, color_to:Color) -> void:
+	var count :int = get_visible_count()
+	for i in count:
+		var rate = float(i)/(count-1)
+		multimesh.set_instance_color(i,color_from.lerp(color_to,rate))
+
 func get_total_count() -> int:
 	return multimesh.instance_count
 

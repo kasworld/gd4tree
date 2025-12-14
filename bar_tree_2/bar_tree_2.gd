@@ -4,7 +4,7 @@ class_name BarTree2
 
 func init_bar_with_color(color_from :Color, color_to:Color, bar_count :int) -> BarTree2:
 	init_with_color(BoxMesh.new(), Color.WHITE, bar_count)
-	init_bar_color(color_from, color_to)
+	set_gradient_color(color_from, color_to)
 	return self
 
 func init_bar_with_material(mat :Material, bar_count :int) -> BarTree2:
@@ -29,12 +29,6 @@ func init_bar_transform(
 		var t := Transform3D(Basis(), bar_position)
 		t = t.scaled_local( bar_size )
 		multimesh.set_instance_transform(i,t )
-
-func init_bar_color(color_from :Color, color_to:Color) -> void:
-	var count :int = get_visible_count()
-	for i in count:
-		var rate = float(i)/count
-		multimesh.set_instance_color(i,color_from.lerp(color_to,rate))
 
 func rotate_bar_y(bar_rotation :float) -> void:
 	var count :int = get_visible_count()

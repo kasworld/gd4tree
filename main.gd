@@ -154,4 +154,4 @@ func _on_멈추기_pressed() -> void:
 func _on_색깔바꾸기_pressed() -> void:
 	for bt in $BarTreeContainer.get_children():
 		if bt.color_used():
-			bt.init_bar_color(random_color(), random_color())
+			bt.set_gradient_color(random_color(), random_color())
