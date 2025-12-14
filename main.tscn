@@ -1,7 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://1o57d228fylb"]
+[gd_scene load_steps=11 format=3 uid="uid://1o57d228fylb"]
 
 [ext_resource type="Script" uid="uid://jgyppeev7bjw" path="res://main.gd" id="1_atpxs"]
 [ext_resource type="Texture2D" uid="uid://bhmbb7tlw5j3a" path="res://image/Dark-brown-fine-wood-texture.jpg" id="2_jkwbg"]
+[ext_resource type="PackedScene" uid="uid://dl14flc0fkeyt" path="res://axis_arrow3d/axis_arrow_3d.tscn" id="3_h2yge"]
+[ext_resource type="PackedScene" uid="uid://ces3a6yv0c5fi" path="res://moving_carmera_light/moving_camera_light.tscn" id="4_1bvp3"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_668xm"]
 albedo_texture = ExtResource("2_jkwbg")
@@ -19,20 +21,26 @@ size = Vector2(10, 10)
 [sub_resource type="Theme" id="Theme_0xm2m"]
 default_font_size = 36
 
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
+
+[sub_resource type="Sky" id="Sky_h2yge"]
+sky_material = SubResource("ProceduralSkyMaterial_0xm2m")
+
+[sub_resource type="Environment" id="Environment_1bvp3"]
+background_mode = 2
+sky = SubResource("Sky_h2yge")
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+
 [node name="Main" type="Node3D"]
 script = ExtResource("1_atpxs")
 
 [node name="Floor" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_e5nb6")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, -1, 1, -1)
-current = true
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
-light_energy = 2.0
-shadow_enabled = true
+transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70710677, -0.70710677, -0.49999997, 0.49999997, 0, 0, 0)
+sky_mode = 1
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
@@ -41,6 +49,10 @@ shadow_enabled = true
 omni_range = 100.0
 
 [node name="BarTreeContainer" type="Node3D" parent="."]
+
+[node name="왼쪽패널" type="VBoxContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="오른쪽패널" type="VBoxContainer" parent="."]
 modulate = Color(1, 1, 1, 0.498039)
@@ -86,6 +98,17 @@ alignment = 2
 [node name="Control" type="Control" parent="오른쪽패널"]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1bvp3")
+
+[node name="AxisArrow3D" parent="." instance=ExtResource("3_h2yge")]
+
+[node name="FixedCameraLight" parent="." instance=ExtResource("4_1bvp3")]
+
+[node name="MovingCameraLightHober" parent="." instance=ExtResource("4_1bvp3")]
+
+[node name="MovingCameraLightAround" parent="." instance=ExtResource("4_1bvp3")]
 
 [connection signal="pressed" from="오른쪽패널/막대기수늘리기" to="." method="_on_막대기수늘리기_pressed"]
 [connection signal="pressed" from="오른쪽패널/막대기수줄이기" to="." method="_on_막대기수줄이기_pressed"]

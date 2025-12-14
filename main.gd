@@ -5,26 +5,36 @@ var brown_img = preload("res://image/Dark-brown-fine-wood-texture.jpg")
 var floor_img = preload("res://image/floorwood.jpg")
 var leaf_img = preload("res://image/leaf.png")
 
-var field_size := Vector2(10,10)
+const WorldSize := Vector3(30,20,30)
+
+func ui_panel_init() -> void:
+	var vp_size := get_viewport().get_visible_rect().size
+	var 짧은길이 :float = min(vp_size.x, vp_size.y)
+	$"왼쪽패널".size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
+	$오른쪽패널.size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
+	$오른쪽패널.position = Vector2(vp_size.x/2 + 짧은길이/2, 0)
+func on_viewport_size_changed():
+	ui_panel_init()
 
 func _ready() -> void:
-	var vp_size = get_viewport().get_visible_rect().size
-	var 패널넖이 = vp_size.x/10
-	$오른쪽패널.size = Vector2(패널넖이, vp_size.y)
-	$오른쪽패널.position = Vector2(vp_size.x - 패널넖이, 0)
+	get_viewport().size_changed.connect(on_viewport_size_changed)
+	ui_panel_init()
 
-	$Floor.mesh.size = field_size
-	$OmniLight3D.position.y = field_size.length()
-	$DirectionalLight3D.position = Vector3(field_size.x/2, field_size.length(), field_size.y/2 )
-	$DirectionalLight3D.look_at(Vector3.ZERO)
+	$Floor.mesh.size = Vector2(WorldSize.z, WorldSize.x)
+	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
+	$OmniLight3D.omni_range = WorldSize.length()*2
+	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, 	Vector3(0, 0, WorldSize.z*2), WorldSize.length()*2)
+	$MovingCameraLightHober.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
+	$MovingCameraLightAround.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
+	$AxisArrow3D.set_size(WorldSize.length()/10)
 
 	var xn = 8
 	var yn = 8
 	for i in xn*yn:
-		var r = min( field_size.x / xn, field_size.y / yn )
-		var adjust = Vector2( 1.0- r/field_size.x , 1.0- r/field_size.y )
+		var r = min( WorldSize.x / xn, WorldSize.z / yn )
+		var adjust = Vector2( 1.0- r/WorldSize.x , 1.0- r/WorldSize.z )
 		var pos = calc_posf_by_i(i, xn, yn)
-		make_tree(r,r,Vector3(pos.y*field_size.y*adjust.y , 0, pos.x*field_size.x*adjust.x))
+		make_tree(r,r,Vector3(pos.y*WorldSize.z*adjust.y , 0, pos.x*WorldSize.x*adjust.x))
 
 func calc_posi_by_i(i :int, xn:int) -> Vector2i:
 	return Vector2i(i % xn, i / xn)
@@ -99,14 +109,29 @@ func random_color()->Color:
 
 var bar_rot := 0.1
 func _process(_delta: float) -> void:
-	var t = Time.get_unix_time_from_system() /10
-	$Camera3D.position = Vector3(sin(t)*field_size.length()/3 ,field_size.length()/3, cos(t)*field_size.length()/3  )
-	$Camera3D.look_at(Vector3.ZERO)
+	var t := Time.get_unix_time_from_system() /2.3
+	if $MovingCameraLightHober.is_current_camera():
+		$MovingCameraLightHober.move_hober_around_z(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
+	elif $MovingCameraLightAround.is_current_camera():
+		$MovingCameraLightAround.move_wave_around_y(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
 	for n in $BarTreeContainer.get_children():
 		n.rotate_bar_y(bar_rot)
 
+func _on_카메라변경_pressed() -> void:
+	MovingCameraLight.NextCamera()
+
+func _on_button_fov_up_pressed() -> void:
+	MovingCameraLight.GetCurrentCamera().fov_camera_inc()
+
+func _on_button_fov_down_pressed() -> void:
+	MovingCameraLight.GetCurrentCamera().fov_camera_dec()
+
 var key2fn = {
 	KEY_ESCAPE: _on_button_esc_pressed,
+	KEY_ENTER:_on_카메라변경_pressed,
+	KEY_PAGEUP:_on_button_fov_up_pressed,
+	KEY_PAGEDOWN:_on_button_fov_down_pressed,
+
 	#KEY_UP: _on_막대기수늘리기_pressed,
 	#KEY_DOWN: _on_막대기수줄이기_pressed,
 	KEY_RIGHT: _on_오른쪽으로돌리기_pressed,
@@ -121,6 +146,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		var fn = key2fn.get(event.keycode)
 		if fn != null:
 			fn.call()
+		if $FixedCameraLight.is_current_camera():
+			var fi = FlyNode3D.Key2Info.get(event.keycode)
+			if fi != null:
+				FlyNode3D.fly_node3d($FixedCameraLight, fi)
 	elif event is InputEventMouseButton and event.is_pressed():
 		pass
 
