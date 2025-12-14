@@ -16,7 +16,6 @@ static func 집중선만들기(r :float, start:float, end:float, depth :float, c
 		mms.set_inst_color(i, co)
 	return mms
 
-
 func _init_multimesh(mesh :Mesh, mat :Material) -> void:
 	mesh.material = mat
 	multimesh.mesh = mesh
@@ -25,9 +24,6 @@ func _init_multimesh(mesh :Mesh, mat :Material) -> void:
 func _set_count(count :int) -> void:
 	multimesh.instance_count = count
 	multimesh.visible_instance_count = count
-
-func color_used() -> bool:
-	return multimesh.use_colors
 
 func make_color_material(co :Color) -> StandardMaterial3D:
 	var mat := StandardMaterial3D.new()
@@ -59,6 +55,11 @@ func init_with_material(mesh :Mesh, mat :Material, count :int) -> MultiMeshShape
 	_init_transform()
 	return self
 
+func color_used() -> bool:
+	return multimesh.use_colors
+
+func get_total_count() -> int:
+	return multimesh.instance_count
 
 func set_visible_count(i :int) -> void:
 	multimesh.visible_instance_count = i

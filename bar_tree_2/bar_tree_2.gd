@@ -2,36 +2,22 @@ extends Node3D
 
 class_name BarTree2
 
-var tree_width :float = 3.0
-var tree_height :float = 1.6
-var bar_width :float = 3.0
-var bar_shift_rate := 0.0
-
-func init_common_params(
-		tree_width_a: float,
-		tree_height_a :float,
-		bar_width_a :float,
-		bar_shift_rate_a :float,
-		) -> BarTree2:
-	tree_height = tree_height_a
-	tree_width = tree_width_a
-	bar_width = bar_width_a
-	bar_shift_rate = bar_shift_rate_a
-	return self
-
 func init_with_color(color_from :Color, color_to:Color, bar_count :int) -> BarTree2:
 	$MultiMeshShape.init_with_color(BoxMesh.new(), Color.WHITE, bar_count)
-	init_bar_transform()
 	init_bar_color(color_from, color_to)
 	return self
 
 func init_with_material(mat :Material, bar_count :int) -> BarTree2:
 	$MultiMeshShape.init_with_material(BoxMesh.new(), mat, bar_count)
-	init_bar_transform()
 	return self
 
 # also reset bar rotation
-func init_bar_transform() -> void:
+func init_bar_transform(
+		tree_width: float,
+		tree_height :float,
+		bar_width :float,
+		bar_shift_rate :float,
+	) -> void:
 	var count :int = $MultiMeshShape.get_visible_count()
 	# Set the transform of the instances.
 	var bar_height := tree_height/count
@@ -50,9 +36,11 @@ func init_bar_color(color_from :Color, color_to:Color) -> void:
 		var rate = float(i)/count
 		$MultiMeshShape.multimesh.set_instance_color(i,color_from.lerp(color_to,rate))
 
+func color_used() -> bool:
+	return $MultiMeshShape.color_used()
+
 func set_visible_bar_count(bar_count :int) -> void:
 	$MultiMeshShape.set_visible_count(bar_count)
-	init_bar_transform()
 
 func rotate_bar_y(bar_rotation :float) -> void:
 	var count :int = $MultiMeshShape.get_visible_count()

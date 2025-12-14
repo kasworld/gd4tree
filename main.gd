@@ -47,19 +47,21 @@ func make_tree(wmax :float, hmax :float, pos :Vector3)->BarTree2:
 	var t :BarTree2
 	# add left side
 	if make_flag & (1<<0) != 0:
-		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, 2.0)
+		t = tree2_scene.instantiate()
 		$BarTreeContainer.add_child(t)
 		t.position = pos
 		type_make = [0,1,2,2].pick_random()
 		init_tree_material(type_make, t, bar_count)
+		t.init_bar_transform(tree_width, tree_height, bar_width, 2.0)
 
 	# add right side
 	if make_flag & (1<<1) != 0:
-		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, -2.0)
+		t = tree2_scene.instantiate()
 		$BarTreeContainer.add_child(t)
 		t.position = pos
 		type_make = [0,1,2,2].pick_random()
 		init_tree_material(type_make, t, bar_count)
+		t.init_bar_transform(tree_width, tree_height, bar_width, -2.0)
 
 	# add center
 	if make_flag & (1<<2) != 0:
@@ -67,11 +69,12 @@ func make_tree(wmax :float, hmax :float, pos :Vector3)->BarTree2:
 			tree_width *= 3
 		else:
 			tree_width *= 0.9
-		t = tree2_scene.instantiate().init_common_params(tree_width, tree_height, bar_width, 0)
+		t = tree2_scene.instantiate()
 		$BarTreeContainer.add_child(t)
 		t.position = pos
 		type_make = [0,1,2,2].pick_random()
 		init_tree_material(type_make, t, bar_count)
+		t.init_bar_transform(tree_width, tree_height, bar_width, 0)
 
 	return t
 
@@ -94,22 +97,23 @@ func init_tree_material(i :int, t:BarTree2, bar_count :int):
 func random_color()->Color:
 	return Color(randf(),randf(),randf())
 
+var bar_rot := 0.1
 func _process(_delta: float) -> void:
 	var t = Time.get_unix_time_from_system() /10
 	$Camera3D.position = Vector3(sin(t)*field_size.length()/3 ,field_size.length()/3, cos(t)*field_size.length()/3  )
 	$Camera3D.look_at(Vector3.ZERO)
 	for n in $BarTreeContainer.get_children():
-		n.rotate_bar_y(0.1)
+		n.rotate_bar_y(bar_rot)
 
 var key2fn = {
 	KEY_ESCAPE: _on_button_esc_pressed,
-	KEY_UP: _on_막대기수늘리기_pressed,
-	KEY_DOWN: _on_막대기수줄이기_pressed,
+	#KEY_UP: _on_막대기수늘리기_pressed,
+	#KEY_DOWN: _on_막대기수줄이기_pressed,
 	KEY_RIGHT: _on_오른쪽으로돌리기_pressed,
 	KEY_LEFT: _on_왼쪽으로돌리기_pressed,
 	KEY_C: _on_색깔바꾸기_pressed,
 	KEY_SPACE: _on_멈추기_pressed,
-	KEY_ENTER: _on_재정렬하기_pressed,
+	#KEY_ENTER: _on_재정렬하기_pressed,
 }
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -123,31 +127,31 @@ func _unhandled_input(event: InputEvent) -> void:
 func _on_button_esc_pressed() -> void:
 	get_tree().quit()
 
-func _on_막대기수늘리기_pressed() -> void:
-	for bt in $BarTreeContainer.get_children():
-		bt.set_visible_bar_count(bt.bar_count +1)
-
-func _on_막대기수줄이기_pressed() -> void:
-	for bt in $BarTreeContainer.get_children():
-		bt.set_visible_bar_count(bt.bar_count -1)
-
+#func _on_막대기수늘리기_pressed() -> void:
+	#for bt in $BarTreeContainer.get_children():
+		#bt.set_visible_bar_count(bt.bar_count +1)
+#
+#func _on_막대기수줄이기_pressed() -> void:
+	#for bt in $BarTreeContainer.get_children():
+		#bt.set_visible_bar_count(bt.bar_count -1)
+#
 func _on_오른쪽으로돌리기_pressed() -> void:
 	for bt in $BarTreeContainer.get_children():
-		bt.bar_rotation = abs(bt.bar_rotation)
+		bar_rot = -0.1
 
 func _on_왼쪽으로돌리기_pressed() -> void:
 	for bt in $BarTreeContainer.get_children():
-		bt.bar_rotation = -abs(bt.bar_rotation)
+		bar_rot = 0.1
 
 func _on_멈추기_pressed() -> void:
 	for bt in $BarTreeContainer.get_children():
-		bt.auto_rotate_bar = not bt.auto_rotate_bar
+		bar_rot = 0.0
 
-func _on_재정렬하기_pressed() -> void:
-	for bt in $BarTreeContainer.get_children():
-		bt.update_bar_transform()
+#func _on_재정렬하기_pressed() -> void:
+	#for bt in $BarTreeContainer.get_children():
+		#bt.update_bar_transform()
 
 func _on_색깔바꾸기_pressed() -> void:
 	for bt in $BarTreeContainer.get_children():
-		if bt.use_color:
-			bt.set_bar_color(random_color(), random_color())
+		if bt.color_used():
+			bt.init_bar_color(random_color(), random_color())
