@@ -83,14 +83,14 @@ func init_tree_material(i :int, t:BarTree2, bar_count :int):
 		0:
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = floor_img
-			t.init_with_material(mat, bar_count)
+			t.init_bar_with_material(mat, bar_count)
 		1:
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = leaf_img
 			mat.uv1_triplanar = true
-			t.init_with_material(mat, bar_count)
+			t.init_bar_with_material(mat, bar_count)
 		2:
-			t.init_with_color(random_color(), random_color(), bar_count)
+			t.init_bar_with_color(random_color(), random_color(), bar_count)
 		_:
 			assert(false)
 
