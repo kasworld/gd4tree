@@ -48,10 +48,11 @@ func calc_posf_by_i(i :int, xn :int, yn :int) -> Vector2:
 func make_tree(wmax :float, hmax :float, pos :Vector3)->BarTree2:
 	var tree_width := wmax/3
 	var tree_height := hmax
-	var bar_width = tree_width * randf_range(0.5 , 2.0)/10
+	var bar_width :float = tree_width * randf_range(0.5 , 2.0)/10
 	var bar_count := randi_range(5,200)
 	#var bar_rotation := 0.1
-	var type_make = [0,1,2,2].pick_random()
+	var type_make :int = [0,1,2,2].pick_random()
+	var tree_size := Vector3(tree_width,tree_height,bar_width)
 
 	var make_flag := randi_range(1,7)
 	var t :BarTree2
@@ -62,7 +63,7 @@ func make_tree(wmax :float, hmax :float, pos :Vector3)->BarTree2:
 		t.position = pos
 		type_make = [0,1,2,2].pick_random()
 		init_tree_material(type_make, t, bar_count)
-		t.init_bar_transform(tree_width, tree_height, bar_width, 2.0)
+		t.init_bartree_transform(tree_size, 2.0)
 
 	# add right side
 	if make_flag & (1<<1) != 0:
@@ -71,7 +72,7 @@ func make_tree(wmax :float, hmax :float, pos :Vector3)->BarTree2:
 		t.position = pos
 		type_make = [0,1,2,2].pick_random()
 		init_tree_material(type_make, t, bar_count)
-		t.init_bar_transform(tree_width, tree_height, bar_width, -2.0)
+		t.init_bartree_transform(tree_size, -2.0)
 
 	# add center
 	if make_flag & (1<<2) != 0:
@@ -79,12 +80,13 @@ func make_tree(wmax :float, hmax :float, pos :Vector3)->BarTree2:
 			tree_width *= 3
 		else:
 			tree_width *= 0.9
+		tree_size = Vector3(tree_width,tree_height,bar_width)
 		t = tree2_scene.instantiate()
 		$BarTreeContainer.add_child(t)
 		t.position = pos
 		type_make = [0,1,2,2].pick_random()
 		init_tree_material(type_make, t, bar_count)
-		t.init_bar_transform(tree_width, tree_height, bar_width, 0)
+		t.init_bartree_transform(tree_size, 0)
 
 	return t
 
@@ -93,14 +95,14 @@ func init_tree_material(i :int, t:BarTree2, bar_count :int):
 		0:
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = floor_img
-			t.init_bar_with_material(mat, bar_count)
+			t.init_bartree_with_material(mat, bar_count)
 		1:
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = leaf_img
 			mat.uv1_triplanar = true
-			t.init_bar_with_material(mat, bar_count)
+			t.init_bartree_with_material(mat, bar_count)
 		2:
-			t.init_bar_with_color(random_color(), random_color(), bar_count)
+			t.init_bartree_with_color(random_color(), random_color(), bar_count)
 		_:
 			assert(false)
 
@@ -115,7 +117,7 @@ func _process(_delta: float) -> void:
 	elif $MovingCameraLightAround.is_current_camera():
 		$MovingCameraLightAround.move_wave_around_y(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
 	for n in $BarTreeContainer.get_children():
-		n.rotate_bar_y(bar_rot)
+		n.rotate_tree_bar_y(bar_rot)
 
 func _on_카메라변경_pressed() -> void:
 	MovingCameraLight.NextCamera()
