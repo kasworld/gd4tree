@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://1o57d228fylb"]
+[gd_scene load_steps=12 format=3 uid="uid://1o57d228fylb"]
 
 [ext_resource type="Script" uid="uid://jgyppeev7bjw" path="res://main.gd" id="1_atpxs"]
 [ext_resource type="Texture2D" uid="uid://bhmbb7tlw5j3a" path="res://image/Dark-brown-fine-wood-texture.jpg" id="2_jkwbg"]
@@ -17,6 +17,9 @@ grow_amount = -2.547
 lightmap_size_hint = Vector2i(32, 32)
 material = SubResource("StandardMaterial3D_668xm")
 size = Vector2(10, 10)
+
+[sub_resource type="Theme" id="Theme_1bvp3"]
+default_font_size = 32
 
 [sub_resource type="Theme" id="Theme_0xm2m"]
 default_font_size = 36
@@ -53,6 +56,15 @@ omni_range = 100.0
 [node name="왼쪽패널" type="VBoxContainer" parent="."]
 offset_right = 40.0
 offset_bottom = 40.0
+theme = SubResource("Theme_1bvp3")
+
+[node name="LabelPerformance" type="Label" parent="왼쪽패널"]
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="LabelInfo" type="Label" parent="왼쪽패널"]
+layout_mode = 2
+autowrap_mode = 3
 
 [node name="오른쪽패널" type="VBoxContainer" parent="."]
 modulate = Color(1, 1, 1, 0.498039)

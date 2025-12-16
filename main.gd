@@ -10,11 +10,31 @@ const WorldSize := Vector3(30,20,30)
 func ui_panel_init() -> void:
 	var vp_size := get_viewport().get_visible_rect().size
 	var 짧은길이 :float = min(vp_size.x, vp_size.y)
-	$"왼쪽패널".size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
-	$오른쪽패널.size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
+	var panel_size := Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
+	$"왼쪽패널".size = panel_size
+	$"왼쪽패널".custom_minimum_size = panel_size
+	$오른쪽패널.size = panel_size
+	$"오른쪽패널".custom_minimum_size = panel_size
 	$오른쪽패널.position = Vector2(vp_size.x/2 + 짧은길이/2, 0)
 func on_viewport_size_changed():
 	ui_panel_init()
+
+func label_demo() -> void:
+	if $"왼쪽패널/LabelPerformance".visible:
+		$"왼쪽패널/LabelPerformance".text = """%d FPS (%.2f mspf)
+Currently rendering: occlusion culling:%s
+%d objects
+%dK primitive indices
+%d draw calls""" % [
+		Engine.get_frames_per_second(),1000.0 / Engine.get_frames_per_second(),
+		get_tree().root.use_occlusion_culling,
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME),
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME) * 0.001,
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME),
+		]
+	if $"왼쪽패널/LabelInfo".visible:
+		$"왼쪽패널/LabelInfo".text = "%s" % [ MovingCameraLight.GetCurrentCamera() ]
+
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(on_viewport_size_changed)
@@ -111,6 +131,8 @@ func random_color()->Color:
 
 var bar_rot := 0.1
 func _process(_delta: float) -> void:
+	label_demo()
+
 	var t := Time.get_unix_time_from_system() /2.3
 	if $MovingCameraLightHober.is_current_camera():
 		$MovingCameraLightHober.move_hober_around_z(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
