@@ -65,53 +65,32 @@ func calc_posf_by_i(i :int, xn :int, yn :int) -> Vector2:
 	var y = posi.y / float(yn-1) - 0.5
 	return Vector2(x,y)
 
-func make_tree(wmax :float, hmax :float, pos :Vector3)->BarTree2:
-	var tree_width := wmax/3
-	var tree_height := hmax
-	var bar_width :float = tree_width * randf_range(0.5 , 2.0)/10
+func make_tree(wmax :float, hmax :float, pos :Vector3) -> void:
 	var bar_count := randi_range(5,200)
-	#var bar_rotation := 0.1
-	var type_make :int = [0,1,2,2].pick_random()
-	var tree_size := Vector3(tree_width,tree_height,bar_width)
+	var tree_size := Vector3(wmax/3, hmax, wmax/30 * randf_range(0.5 , 2.0))
+	make_tree3(randi_range(1,7), tree_size, bar_count, pos)
 
-	var make_flag := randi_range(1,7)
-	var t :BarTree2
-	# add left side
-	if make_flag & (1<<0) != 0:
-		t = tree2_scene.instantiate()
-		$BarTreeContainer.add_child(t)
-		t.position = pos
-		type_make = [0,1,2,2].pick_random()
-		init_tree_material(type_make, t, bar_count)
-		t.init_bartree_transform(tree_size, 2.0)
-
-	# add right side
-	if make_flag & (1<<1) != 0:
-		t = tree2_scene.instantiate()
-		$BarTreeContainer.add_child(t)
-		t.position = pos
-		type_make = [0,1,2,2].pick_random()
-		init_tree_material(type_make, t, bar_count)
-		t.init_bartree_transform(tree_size, -2.0)
-
-	# add center
-	if make_flag & (1<<2) != 0:
-		if make_flag == (1<<2):
-			tree_width *= 3
+func make_tree3(make_flag:int, tree_size :Vector3, bar_count :int, pos :Vector3) -> void:
+	if make_flag & (1<<0) != 0: # add left side
+		make_sub_tree([0,1,2,2].pick_random(), tree_size, bar_count, 2.0, pos)
+	if make_flag & (1<<1) != 0: # add right side
+		make_sub_tree([0,1,2,2].pick_random(), tree_size, bar_count, -2.0, pos)
+	if make_flag & (1<<2) != 0: # add center
+		if make_flag == (1<<2): # side not exist
+			tree_size.x *= 3
 		else:
-			tree_width *= 0.9
-		tree_size = Vector3(tree_width,tree_height,bar_width)
-		t = tree2_scene.instantiate()
-		$BarTreeContainer.add_child(t)
-		t.position = pos
-		type_make = [0,1,2,2].pick_random()
-		init_tree_material(type_make, t, bar_count)
-		t.init_bartree_transform(tree_size, 0)
+			tree_size.x *= 0.9
+		make_sub_tree([0,1,2,2].pick_random(), tree_size, bar_count, 0, pos)
 
-	return t
+func make_sub_tree(type_make:int, tree_size :Vector3, bar_count :int, shift :float, pos :Vector3) -> void:
+	var t = tree2_scene.instantiate()
+	$BarTreeContainer.add_child(t)
+	t.position = pos
+	init_tree_material(type_make, t, bar_count)
+	t.init_bartree_transform(tree_size, shift)
 
-func init_tree_material(i :int, t:BarTree2, bar_count :int):
-	match i :
+func init_tree_material(type_make :int, t:BarTree2, bar_count :int):
+	match type_make :
 		0:
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = floor_img
