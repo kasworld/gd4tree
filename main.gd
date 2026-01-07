@@ -1,6 +1,6 @@
 extends Node3D
 
-var tree2_scene = preload("res://bar_tree_2/bar_tree_2.tscn")
+var bartree_scene = preload("res://bar_tree/bar_tree.tscn")
 var brown_img = preload("res://image/Dark-brown-fine-wood-texture.jpg")
 var floor_img = preload("res://image/floorwood.jpg")
 var leaf_img = preload("res://image/leaf.png")
@@ -83,13 +83,13 @@ func make_tree3(make_flag:int, tree_size :Vector3, bar_count :int, pos :Vector3)
 		make_sub_tree([0,1,2,2].pick_random(), tree_size, bar_count, 0, pos)
 
 func make_sub_tree(type_make:int, tree_size :Vector3, bar_count :int, shift :float, pos :Vector3) -> void:
-	var t = tree2_scene.instantiate()
+	var t = bartree_scene.instantiate()
 	$BarTreeContainer.add_child(t)
 	t.position = pos
 	init_tree_material(type_make, t, bar_count)
 	t.init_bartree_transform(tree_size, shift)
 
-func init_tree_material(type_make :int, t:BarTree2, bar_count :int):
+func init_tree_material(type_make :int, t:BarTree, bar_count :int):
 	match type_make :
 		0:
 			var mat = StandardMaterial3D.new()
